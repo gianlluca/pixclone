@@ -1,0 +1,41 @@
+version: "3.3"
+
+services:
+  pixclone_db:
+    image: postgres:14.2-alpine
+    container_name: pixclone_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: pixclone
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    volumes: 
+      - pixclone_db:/var/lib/postgresql/data
+  pixclone_backend:
+    build:
+      context: "."
+    container_name: pixclone_backend
+    environment:
+      # THESE ENV VARIABLES ARE HERE ONLY TO SIMPLIFY THIS SAMPLE
+      # NEVER STORE SENSITIVE DATA LIKE THIS
+      - SECRET_KEY=745360e41d36662aedb9aa0dabef6cf05a35660935de9fcc1fbf2864b728604058bcc985548a94f3c12bba8ef24f1a439d500b6deb735e1601748d3302066c5e
+      - DB_DB=pixclone
+      - DB_HOST=pixclone_db
+      - DB_PORT=5432
+      - DB_USER=admin
+      - DB_PASS=password123
+      - GIN_MODE=release
+    ports:
+      - "5858:5858" # dev
+      # - "80:80" # production
+      # - "443:443" # production
+    # expose:
+    #   - "80" # production
+    #   - "443" # production
+    depends_on:
+      - "pixclone_db"
+volumes:
+  pixclone_db: # create volume for db data persists.
