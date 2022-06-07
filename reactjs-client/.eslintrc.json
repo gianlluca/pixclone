@@ -30,8 +30,13 @@
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off",
         "jsx-a11y/no-noninteractive-element-interactions": "off",
-        "no-param-reassign":"off",
-        "max-len": ["error", { "code": 120 }],
+        "no-param-reassign": "off",
+        "max-len": [
+            "error",
+            {
+                "code": 120
+            }
+        ],
         "react/jsx-props-no-spreading": "off"
     }
 }

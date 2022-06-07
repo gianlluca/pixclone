@@ -2,7 +2,7 @@
 
 This project was made targeting to be as simple as possible, no to be pretty but to show a functional integration between a ReactJS website and a Golang backend.
 
-## The client needs the backend running to work properly:
+## The client needs the backend running to work properly.
 ### The backend needs docker and docker-compose.
 Once you have installed type `make build && make run` if you have make installed or type `docker-compose -f docker-compose.yml build && docker-compose -f docker-compose.yml up` if you don't have it.
 

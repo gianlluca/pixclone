@@ -56,6 +56,7 @@ func GetTransactionsPublicDataByUserID(userID *uuid.UUID) (*[]TransactionPublicD
 		Joins("Sender").
 		Joins("Receiver").
 		Where("sender_id = ? OR receiver_id = ?", *userID, *userID).
+		Order("created_at desc").
 		Find(&transactionPublicData)
 	return transactionPublicData, result.Error
 }

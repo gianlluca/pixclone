@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
 import { api } from '../../services/api';
 import { Container } from './styles';
 
@@ -17,8 +16,6 @@ const transactionSchema = yup.object().shape({
 });
 
 export function NewTransaction({ balance, refreshAll }) {
-  const auth = useAuth();
-
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(transactionSchema),
   });
@@ -36,11 +33,6 @@ export function NewTransaction({ balance, refreshAll }) {
       refreshAll();
       return null;
     } catch (error) {
-      // Signout if receives a unauthorized code
-      if (error.response.status === 401) {
-        auth.signOut();
-        return null;
-      }
       // returns an error message to show
       setErrorMessage(error.response.data.message);
       return null;

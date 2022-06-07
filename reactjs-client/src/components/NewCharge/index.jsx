@@ -4,7 +4,6 @@ import * as yup from 'yup';
 import { useState } from 'react';
 import { Container } from './styles';
 import { api } from '../../services/api';
-import { useAuth } from '../../hooks/useAuth';
 
 const chargeSchema = yup.object().shape({
   username: yup.string()
@@ -17,8 +16,6 @@ const chargeSchema = yup.object().shape({
 });
 
 export function NewCharge({ refreshAll }) {
-  const auth = useAuth();
-
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(chargeSchema),
   });
@@ -36,11 +33,6 @@ export function NewCharge({ refreshAll }) {
       refreshAll();
       return null;
     } catch (error) {
-      // Signout if receives a unauthorized code
-      if (error.response.status === 401) {
-        auth.signOut();
-        return null;
-      }
       // returns an error message to show
       setErrorMessage(error.response.data.message);
       return null;

@@ -1,13 +1,13 @@
 import { ChargeItem } from '../ChargeItem';
 import { Container } from './styles';
 
-export function Charges({ props }) {
+export function Charges({ charges, refreshAll }) {
   return (
     <Container>
       <strong>Cobranças:</strong>
       {
-        props.charges.map(
-          (charge) => <ChargeItem key={charge.id} charge={charge} refreshAll={props.refreshAll} />,
+        charges.map(
+          (charge) => <ChargeItem key={charge.id} charge={charge} refreshAll={refreshAll} />,
         )
       }
     </Container>

@@ -2,6 +2,7 @@
 import React, {
   createContext,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
@@ -11,7 +12,7 @@ import { api } from '../services/api';
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-  const [token, setToken] = useState(loadToken);
+  const [token, setToken] = useState('');
   const [userInfo, setUserInfo] = useState(null);
 
   const signIn = async (userDataInput) => {
@@ -49,7 +50,23 @@ function AuthProvider({ children }) {
     setUserInfo(null);
   };
 
-  api.defaults.headers.common = token ? { Authorization: `Bearer ${token}` } : {};
+  useEffect(() => {
+    api.defaults.headers.common = token ? { Authorization: `Bearer ${token}` } : {};
+  }, [token]);
+
+  // Signout user if receives an unauthorized code
+  useEffect(() => {
+    setToken(loadToken);
+
+    const responseInterceptor = api.interceptors.response.use((response) => response, (error) => {
+      if (error.response.status === 401) {
+        signOut();
+      }
+      return Promise.reject(error);
+    });
+
+    return () => api.interceptors.response.eject(responseInterceptor);
+  }, []);
 
   return (
     <AuthContext.Provider value={

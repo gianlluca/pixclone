@@ -21,7 +21,7 @@ export function Header() {
                 <p>{`Bem Vindo, ${auth.userInfo.display_name}`}</p>
                 <p>{`Saldo: ${formatter.format(auth.userInfo.balance)}`}</p>
               </div>
-              <SignOutButton type="button" onClick={auth.signOut}>
+              <SignOutButton onClick={auth.signOut}>
                 Sign Out
               </SignOutButton>
             </UserInfo>

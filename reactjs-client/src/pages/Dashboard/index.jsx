@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TailSpin } from 'react-loader-spinner';
 
-import { api } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
+import { GetUserCharges, GetUserInfo, GetUserTransactions } from '../../services/api';
 import { Charges } from '../../components/Charges';
 import { Transactions } from '../../components/Transactions';
 import { NewTransaction } from '../../components/NewTransaction';
@@ -13,68 +14,31 @@ export function DashboardPage() {
   const auth = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [charges, setCharges] = useState([]);
+  const navigate = useNavigate();
 
-  const refreshUserInfo = async () => {
-    try {
-      const response = await api.get('user');
-      const { data } = response.data;
-      return data;
-    } catch (error) {
-      // Signout if receives a unauthorized code
-      if (error.response.status === 401) {
-        auth.signOut();
-      }
-      return {};
-    }
-  };
-
-  const refreshTransactions = async () => {
-    try {
-      const response = await api.get('transactions/all');
-      const { data } = response.data;
-      return data;
-    } catch (error) {
-      // Signout if receives a unauthorized code
-      if (error.response.status === 401) {
-        auth.signOut();
-      }
-      return {};
-    }
-  };
-
-  const refreshCharges = async () => {
-    try {
-      const response = await api.get('charges/all');
-      const { data } = response.data;
-      return data;
-    } catch (error) {
-      // Signout if receives a unauthorized code
-      if (error.response.status === 401) {
-        auth.signOut();
-      }
-      return {};
-    }
-  };
-
-  const refreshAll = async () => {
-    const rUserInfo = await refreshUserInfo();
-    const rTransactions = await refreshTransactions();
-    const rCharges = await refreshCharges();
+  const refreshAll = useCallback(async () => {
+    const rUserInfo = await GetUserInfo();
+    const rTransactions = await GetUserTransactions();
+    const rCharges = await GetUserCharges();
 
     auth.setUserInfo(rUserInfo);
     setTransactions(rTransactions);
     setCharges(rCharges);
-  };
-
-  useEffect(() => {
-    refreshAll();
   }, []);
 
-  return auth.userInfo != null
+  useEffect(() => {
+    if (auth.token) {
+      refreshAll();
+    } else {
+      navigate('/signin');
+    }
+  }, [auth.token, refreshAll]);
+
+  return auth.userInfo
     ? (
       <Container>
-        {charges.length > 0 && <Charges props={{ charges, refreshAll }} />}
-        {transactions.length > 0 && <Transactions props={{ transactions, refreshAll }} />}
+        {charges.length > 0 && <Charges charges={charges} refreshAll={refreshAll} />}
+        {transactions.length > 0 && <Transactions transactions={transactions} refreshAll={refreshAll} />}
         <NewTransaction balance={auth.userInfo.balance} refreshAll={refreshAll} />
         <br />
         <NewCharge refreshAll={refreshAll} />

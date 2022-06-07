@@ -58,6 +58,7 @@ func GetChargesPublicDataByUserID(userID *uuid.UUID) (*[]ChargePublicData, error
 		Joins("Sender").
 		Joins("Receiver").
 		Where("sender_id = ? OR receiver_id = ?", *userID, *userID).
+		Order("created_at desc").
 		Find(&chargesPublicData)
 	return chargesPublicData, result.Error
 }
