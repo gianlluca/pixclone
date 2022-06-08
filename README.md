@@ -13,6 +13,8 @@ Once the backend is running on `http://localhost:5858` just type `npm start` on 
 
 ![pixclone dashboard](screens/screen1.png?raw=true "pixclone dashboard")
 
+![pixclone newoperation](screens/screen2.png?raw=true "pixclone newoperation")
+
 #
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

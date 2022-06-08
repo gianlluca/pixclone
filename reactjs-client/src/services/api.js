@@ -33,6 +33,26 @@ const GetUserCharges = async () => {
   }
 };
 
+const CreateTransaction = async (transaction) => {
+  try {
+    await api.post('transactions/new', transaction);
+    return null;
+  } catch (error) {
+    // returns an error message to show
+    return error.response.data.message;
+  }
+};
+
+const CreateCharge = async (charge) => {
+  try {
+    await api.post('charges/new', charge);
+    return null;
+  } catch (error) {
+    // returns an error message to show
+    return error.response.data.message;
+  }
+};
+
 const PayCharge = async (chargeId) => {
   try {
     await api.post('charges/pay', { id: chargeId });
@@ -43,5 +63,5 @@ const PayCharge = async (chargeId) => {
 };
 
 export {
-  api, GetUserInfo, GetUserTransactions, GetUserCharges, PayCharge,
+  api, GetUserInfo, GetUserTransactions, GetUserCharges, CreateTransaction, CreateCharge, PayCharge,
 };
